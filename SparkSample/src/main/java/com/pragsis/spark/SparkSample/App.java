@@ -40,7 +40,7 @@ public class App {
 			}
 		});
 
-		// user file
+		// User file
 		JavaRDD<String> fileUsers = sc.textFile("/home/jfrancisco.vicente/datasets/ml-100k/u.user");
 		JavaRDD<Tuple2<String, String>> userRDD = fileUsers
 				.flatMap(new FlatMapFunction<String, Tuple2<String, String>>() {
@@ -59,7 +59,7 @@ public class App {
 		});
 
 
-		/// join
+		/// preparing RDDs before de join
 		JavaPairRDD<String, Integer> ratings = pairs
 				.mapToPair(new PairFunction<Tuple2<String, Integer>, String, Integer>() {
 					public Tuple2<String, Integer> call(Tuple2<String, Integer> t) throws Exception {
@@ -74,6 +74,7 @@ public class App {
 					}
 				});
 
+		// We make first the join, then we do a reduceByKey to get the accumulate ratings by occupations
 		JavaPairRDD<String, Integer> occupationRatings = ratings.join(occupations).mapToPair(new PairFunction<Tuple2<String,Tuple2<Integer,String>>, String, Integer>() {
 
 			public Tuple2<String, Integer> call(Tuple2<String, Tuple2<Integer, String>> t) throws Exception {
@@ -86,8 +87,8 @@ public class App {
 				return a + b;
 			}
 		});
-		///
 
+		// Then we swap key&value and then order by value
 		JavaRDD<Tuple2<Integer, String>> orderedInvertedOccupationCounts = occupationRatings
 				.map(new Function<Tuple2<String, Integer>, Tuple2<Integer, String>>() {
 
@@ -103,6 +104,7 @@ public class App {
 
 				}, false, 1);
 
+		// And finally we swap again key&value to present the data
 		JavaRDD<Tuple2<String, Integer>> orderedOccupationCounts = orderedInvertedOccupationCounts
 				.map(new Function<Tuple2<Integer, String>, Tuple2<String, Integer>>() {
 
