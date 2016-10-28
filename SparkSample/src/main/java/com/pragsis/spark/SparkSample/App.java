@@ -30,7 +30,7 @@ public class App {
 		
 		SparkConf conf = new SparkConf().setAppName("WordCount").setMaster("local[*]");
 		JavaSparkContext sc = new JavaSparkContext(conf);
-
+		
 		// Rating file
 		JavaRDD<String> fileRatings = sc.textFile("/home/jfrancisco.vicente/datasets/ml-100k/u.data");
 		JavaRDD<String> ratingRDD = fileRatings.flatMap(new FlatMapFunction<String, String>() {
@@ -116,7 +116,7 @@ public class App {
 		
 		System.out.println(orderedOccupationCounts.take(10));
 		orderedOccupationCounts.saveAsTextFile("/home/jfrancisco.vicente/datasets/resultados" + System.currentTimeMillis());
-
+		sc.close();
 	}
 
 }
