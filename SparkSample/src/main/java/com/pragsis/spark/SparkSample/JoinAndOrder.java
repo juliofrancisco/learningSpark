@@ -122,9 +122,3 @@ public class JoinAndOrder {
 	}
 
 }
-
-class TupleComparator implements Comparator<Tuple2<Integer, String>>, Serializable {
-	public int compare(Tuple2<Integer, String> tuple1, Tuple2<Integer, String> tuple2) {
-		return tuple1._1 < tuple2._1 ? 0 : 1;
-	}
-}
