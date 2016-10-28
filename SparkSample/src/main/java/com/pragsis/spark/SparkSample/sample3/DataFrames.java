@@ -30,7 +30,7 @@ public class DataFrames {
 		}
 		
 		
-		SparkConf conf = new SparkConf().setAppName("DataFrames").setMaster("local[*]");
+		SparkConf conf = new SparkConf().setAppName("DataFrames");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		SQLContext sqlContext = new org.apache.spark.sql.SQLContext(sc);
 		
