@@ -58,7 +58,7 @@ public class DataFrames {
 				+ "									(SELECT user.occupation, data.rating "
 				+ "										FROM data as data, userinfo as user "
 				+ "										WHERE data.user_id = user.user_id) as agregate"
-				+ "									 group by agregate.occupation order by rating desc").toJavaRDD();
+				+ "									 group by agregate.occupation order by rating desc").toJavaRDD().coalesce(1);
 		
 				
 		userRatings.saveAsTextFile(outDir+ System.currentTimeMillis() + "_DataFrames");
