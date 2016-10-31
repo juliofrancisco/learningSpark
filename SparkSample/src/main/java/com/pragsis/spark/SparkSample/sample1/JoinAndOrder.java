@@ -1,4 +1,4 @@
-package com.pragsis.spark.SparkSample;
+package com.pragsis.spark.SparkSample.sample1;
 
 import java.util.Arrays;
 
@@ -26,11 +26,24 @@ import scala.Tuple2;
 public class JoinAndOrder {
 	public static void main(String[] args) {
 		
+		String userFile = "";
+		String dataFile = "";
+		String outDir = "";
+		
+		
+		if (args.length != 3) {		
+			return;
+		} else {
+			userFile = args[0];
+			dataFile = args[1];
+			outDir = args[2];	
+		}
+		
 		SparkConf conf = new SparkConf().setAppName("JoinAndOrder").setMaster("local[*]");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		
 		// Rating file
-		JavaRDD<String> fileRatings = sc.textFile("/home/cloudera/dataset/ml-100k/u.data");
+		JavaRDD<String> fileRatings = sc.textFile(dataFile);
 		JavaRDD<String> ratingRDD = fileRatings.flatMap(new FlatMapFunction<String, String>() {
 			public Iterable<String> call(String s) {
 				String[] userIds = s.split("\\t");
@@ -39,7 +52,7 @@ public class JoinAndOrder {
 		});
 
 		// User file
-		JavaRDD<String> fileUsers = sc.textFile("/home/cloudera/dataset/ml-100k/u.user");
+		JavaRDD<String> fileUsers = sc.textFile(userFile);
 		JavaRDD<Tuple2<String, String>> userRDD = fileUsers
 				.flatMap(new FlatMapFunction<String, Tuple2<String, String>>() {
 
@@ -115,7 +128,7 @@ public class JoinAndOrder {
 		
 		
 		System.out.println(orderedOccupationCounts.take(10));
-		orderedOccupationCounts.saveAsTextFile("/home/cloudera/dataset/ml-100k/resultados/JoinAndOrder" + System.currentTimeMillis());
+		orderedOccupationCounts.saveAsTextFile(outDir+ System.currentTimeMillis() + "_JoinAndOrder");
 		sc.close();
 	}
 
