@@ -33,7 +33,8 @@ public class HBase {
 			userFile = args[0];	
 		}
 				
-		SparkConf conf = new SparkConf().setAppName("HBase").setMaster("local[*]");
+		//SparkConf conf = new SparkConf().setAppName("HBase").setMaster("local[*]");
+		SparkConf conf = new SparkConf().setAppName("HBase");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		
 		Configuration hbaseConf = HBaseConfiguration.create();
@@ -43,7 +44,7 @@ public class HBase {
 //		hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
 		JavaHBaseContext hbaseContext = new JavaHBaseContext(sc, hbaseConf);
 	
-		JavaRDD<String> textFile = sc.textFile(userFile);
+		JavaRDD<String> textFile = sc.textFile("/home/cloudera/datosPortugal.txt");
 		
 		JavaRDD<String> fields = textFile.filter(new Function<String, Boolean>() {
 
